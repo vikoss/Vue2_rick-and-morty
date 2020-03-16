@@ -1,7 +1,7 @@
 <template>
   <header class="header">
     <h1 class="header__title">
-      The Rick And Morty
+      Header
     </h1>
   </header>
 </template>

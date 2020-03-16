@@ -1,7 +1,12 @@
 <template>
   <article class="article">
       <div class="article__image">
-          <img :src="character.image" :alt="character.name">
+          <div class="article__image--img">
+            <img :src="character.image" :alt="character.name">
+          </div>
+          <div class="article__image--name">
+              <p>{{ character.name }}</p>
+          </div>
       </div>
       <div class="article__info">
           <div class="article__info--text">
@@ -43,3 +48,53 @@ export default {
     
 }
 </script>
+<style lang="scss">
+.article {
+    //max-width: 300px;
+    //width: 100%;
+
+    .article__image {
+        position: relative;
+        img {
+            width: 100%;
+        }
+    }
+}
+
+.article__info--text {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #444;
+    padding: 5px;
+
+    span {
+        color: #9e9e9e;
+    }
+    
+    p {
+        color: #ff9800;
+        margin: 0;
+    }
+}
+
+.article__info {
+    background-color: #333;
+    padding: 10px;
+}
+
+.article__image--name {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    background-color: #202329;
+    opacity: 0.8;
+    text-align: center;
+
+    p {
+        color: white;
+        font-size: 20px;
+        margin: 0px;
+        padding: 10px 0px;
+    }
+}
+</style>
