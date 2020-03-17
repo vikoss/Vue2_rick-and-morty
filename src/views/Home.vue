@@ -3,14 +3,20 @@
     
     
     <div class="main__search">
+      <!-- 
+          Input y button que desencadena la busqueda
+      -->
       <input type="text" class="input--search" v-model="searchPayload.name" placeholder="Search by name of character...">
-      <button class="btn--primary" @click="search(searchPayload)">Buscar</button>
-      
-      <!--  Poner estilos de curosr al tag a-->
+      <button class="btn--primary" @click="search(searchPayload)">Search</button>
+      <!-- 
+          Boton para ocultar o mostart los radiobotones para los filtros de busqueda
+      -->
       <a class="btn--showFilters" @click="viewSearchFilters">{{ searchFilters ? 'Less filters':'More filters' }}</a>
       
       <div v-if="searchFilters" class="main__search--filters">
-        
+        <!-- 
+          Dependendiendo si el tipo de busqueda sea por personajes o episodios se mostraran los filtros que tiene cada uno
+        -->
         <div class="main__search--type">
           <input type="radio" v-model="typeSearch" id="character" value="character">
           <label for="character">Character</label>
@@ -18,10 +24,11 @@
           <label for="episode">Episode</label><br>
         </div>
 
+
         <div v-if="typeSearch == 'character'" class="search--filters">
-          <!-- filtros para personajes -->
-          <!--input type="text" class="input--search" v-model="searchPayload.status" placeholder="Search by status"><br-->
-          <!-- Busqueda por estaus -->
+         <!-- 
+          Se muestran los tipos de filtros para personaje que serian STATUS, GENDER, SPECIE o TYPE
+        -->
           <div class="filters--bloque">
             <div class="filters--title">
               <p>Status</p>
@@ -69,19 +76,22 @@
           
             <input type="text" class="input--search" v-model="searchPayload.species" placeholder="Search by species">
             <input type="text" class="input--search" v-model="searchPayload.type" placeholder="Search by type">
-          
-          
-          <!--input type="text" class="input--search" v-model="searchPayload.gender" placeholder="Search by gender"><br-->
         </div>
         
         <div v-if="typeSearch == 'episode'">
-          <!-- filtros para episodios -->
+          <!-- 
+            Si el tipo de busqueda es por episodio 
+            Entonces solo de muestra el filtro de EPISODE CODE
+          -->
           <input type="text" class="input--search" v-model="searchPayload.episode" placeholder="Search by episode code ex: S01E10"><br>
         </div>
       </div>
 
     </div>
-
+    <!-- 
+        Si mi objeto de personajes tiene contenido 
+        Entonces llama a webComponent que renderiza la vista de una tarjeta con el personaje
+       -->
     <div v-if="characters.results" class="articles">
       
       <AppArticleCharacter 
@@ -90,6 +100,10 @@
         :character="character" />
 
     </div>
+    <!-- 
+        Si mi objeto de episodios tiene contenido 
+        Entonces llama a webComponent que renderiza la vista de una tarjeta con el episodio
+       -->
     <div v-if="episodes.results" class="articles">
 
       <app-article-episode
@@ -98,7 +112,9 @@
         :episode="episode"/>
 
     </div>
-
+    <!-- 
+        Solo valido los botones para que se pueda o no hacer click en ellos cuando esten disponibles
+       -->
     <div class="paginate">
       <button 
         :disabled="paginate.page > 1 ? false : true"
@@ -121,6 +137,10 @@
 </template>
 
 <script>
+/*
+* Decidi instalar la libreria de Rick And Morty ya que pienso que debemos de reinventar la rueda y utilizar todo lo que ya existe 
+* Aunque en este caso era muy sensillo hacer el request
+*/
 import AppArticleCharacter from "@/components/AppArticleCharacter.vue";
 import AppArticleEpisode from "@/components/AppArticleEpisode.vue";
 import { getCharacter, getEpisode } from 'rickmortyapi';
@@ -152,13 +172,17 @@ export default {
   methods:{
     async changePage(page){
       /*
-      * Valido que la pagina no sea menor o igual a 0 y que no sea mayor al numero de paginas maximas.
+      * Valido que la pagina no sea alguna que no exista.
       * Entonces realizo el request
       */
       this.paginate.page = page <= 0 || page > this.paginate.pages ? this.paginate.page : page;
       this.search({page});
 
     },
+    /*
+      * Pregunto si la busqueda sea de tipo personaje o episodioy le paso el payload a la API
+      * Entonces realizo el request
+      */
     async search(payload){
       this.paginate.page = !payload.page ? 1 : payload.page;
       
@@ -176,13 +200,16 @@ export default {
       }else{
         this.characters = {};
         this.episodes = await getEpisode({
-          name:payload.name,
-          episode:payload.episode
+          name:payload.name || this.searchPayload.name,
+          episode:payload.episode || this.searchPayload.episode
           });
         this.paginate.pages = this.episodes.info.pages;
       }
     },
     viewSearchFilters(){
+      /*
+      * Oculto la vista de filtros y reseteo las variables
+      */
       this.searchFilters = !this.searchFilters;
       this.typeSearch = 'character';
       this.searchPayload = {
@@ -193,18 +220,16 @@ export default {
         gender: '',
         episode: '',
       };
-
     }
   },
 
   async created(){
-
+    /*
+    * Llamo la libreria de RAM y seteo la variable de personajes 
+    * Aun que podria llamar desde a qui a mi funcion this.search()
+    */
     this.characters = await getCharacter();
-    
-    //this.paginate.count = this.characters.info.count;
     this.paginate.pages = this.characters.info.pages;
-    //this.paginate.next = this.characters.info.next;
-    //this.paginate.prev = this.characters.info.prev;
   }
 
 }
@@ -301,6 +326,9 @@ export default {
   margin-bottom: 10px;
 }
 
+/*
+* Decido hace solo 3 medias lo cual funciona bien pero se podria mejorar 
+*/
 @media only screen and (min-width: 660px) {
   .articles {
     grid-template-columns: repeat(2, 1fr);
