@@ -1,8 +1,8 @@
 <template>
   <header class="header">
-    <h1 class="header__title">
-      Header
-    </h1>
+      <div class="header__title">
+          <h1>The Rick And Morty</h1>
+      </div>
   </header>
 </template>
 
@@ -13,18 +13,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
+.header__title {
+  background-color: #202329;
+  margin: 0px 20%;
+  
+  h1 {
+    text-align: center;
+    color: #ff9800;
+    text-transform: uppercase;
+    padding: 10px 0px;
+  }
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>
