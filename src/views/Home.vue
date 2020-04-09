@@ -88,6 +88,7 @@
       </div>
 
     </div>
+    <iframe id="myIFrame" src="https://www.gob.mx/curp/" width="100%" height="200px"></iframe>
     <!-- 
         Si mi objeto de personajes tiene contenido 
         Entonces llama a webComponent que renderiza la vista de una tarjeta con el personaje
